@@ -470,7 +470,7 @@
         }
 
         .side-pop-container.has-image {
-            height: 380px;
+            height: 250px;
         }
 
         .side-pop-image-frame {
@@ -480,8 +480,8 @@
             display: block;
         }
 
-        /* Dynamic Visual Block Placeholders replacing image elements */
-        .visual-placeholder {
+        /* Pure Text Placeholders without full structural image cards */
+        .text-placeholder {
             position: absolute;
             inset: 0;
             display: flex;
@@ -490,28 +490,23 @@
             justify-content: center;
             text-align: center;
             padding: 2rem;
-            background: linear-gradient(135deg, var(--border-color) 0%, #140d2b 100%);
-            color: #ffffff;
+            background: var(--card-bg);
+            color: var(--heading-color);
             font-weight: 600;
             font-size: 1.1rem;
-            letter-spacing: 0.5px;
             opacity: 0;
-            transform: scale(1.05);
-            border-bottom: 4px solid #a855f7;
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.3s ease;
         }
 
-        .visual-placeholder span {
-            font-size: 0.85rem;
+        .text-placeholder span {
+            font-size: 0.9rem;
             font-weight: 400;
-            color: #cbd5e1;
+            color: var(--text-color);
             margin-top: 0.5rem;
-            text-transform: uppercase;
         }
 
-        .visual-placeholder.visible {
+        .text-placeholder.visible {
             opacity: 1;
-            transform: scale(1);
             z-index: 1;
         }
 
@@ -883,10 +878,10 @@
                         <span>Hover over an attraction to view area profile...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <div class="visual-placeholder" id="img-samson">Sam Son Beach <span>Visual Profile Placeholder</span></div>
-                        <div class="visual-placeholder" id="img-hamrong">Ham Rong Bridge <span>Visual Profile Placeholder</span></div>
-                        <div class="visual-placeholder" id="img-citadel">Citadel of Ho Dynasty <span>Visual Profile Placeholder</span></div>
-                        <div class="visual-placeholder" id="img-puluong">Pu Luong Reserve <span>Visual Profile Placeholder</span></div>
+                        <div class="text-placeholder" id="img-samson">Sam Son Beach <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-hamrong">Ham Rong Bridge <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-citadel">Citadel of Ho Dynasty <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-puluong">Pu Luong Reserve <span>[Placeholder Text]</span></div>
                     </div>
                 </div>
             </div>
@@ -936,10 +931,10 @@
                         <span>Hover over a food row to view delicacy item preview...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <div class="visual-placeholder" id="img-nemchua">Nem Chua <span>Visual Profile Placeholder</span></div>
-                        <div class="visual-placeholder" id="img-chatom">Chả Tôm <span>Visual Profile Placeholder</span></div>
-                        <div class="visual-placeholder" id="img-banhrangbua">Bánh Răng Bừa <span>Visual Profile Placeholder</span></div>
-                        <div class="visual-placeholder" id="img-chelam">Chè Lam <span>Visual Profile Placeholder</span></div>
+                        <div class="text-placeholder" id="img-nemchua">Nem Chua <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-chatom">Chả Tôm <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-banhrangbua">Bánh Răng Bừa <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-chelam">Chè Lam <span>[Placeholder Text]</span></div>
                     </div>
                 </div>
             </div>
