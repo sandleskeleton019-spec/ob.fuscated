@@ -83,7 +83,7 @@
             background: radial-gradient(circle at 50% 50%, transparent 10%, rgba(12, 6, 26, 0.85) 90%);
         }
 
-        /* Control Toggles (Top Left Corner Stacked) */
+        /* Control Toggles */
         .control-panel {
             position: fixed;
             top: 1.5rem;
@@ -470,31 +470,47 @@
         }
 
         .side-pop-container.has-image {
-            height: auto;
+            height: 380px;
         }
 
         .side-pop-image-frame {
             width: 100%;
+            height: 100%;
             position: relative;
             display: block;
         }
 
-        .side-pop-image-frame img {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-            display: block;
-            opacity: 0;
+        /* Dynamic Visual Block Placeholders replacing image elements */
+        .visual-placeholder {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--border-color) 0%, #140d2b 100%);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            opacity: 0;
             transform: scale(1.05);
+            border-bottom: 4px solid #a855f7;
             transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .side-pop-image-frame img.visible {
+        .visual-placeholder span {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #cbd5e1;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .visual-placeholder.visible {
             opacity: 1;
-            position: relative;
             transform: scale(1);
             z-index: 1;
         }
@@ -867,10 +883,10 @@
                         <span>Hover over an attraction to view area profile...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <img id="img-samson" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Sam Son Coastal Waves and Beach Landscape">
-                        <img id="img-hamrong" src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=600&q=80" alt="Ma River and Iron Railroad Bridge Infrastructure">
-                        <img id="img-citadel" src="https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?auto=format&fit=crop&w=600&q=80" alt="Historic Asian Stone Fortification Citadel Wall Ruins">
-                        <img id="img-puluong" src="https://images.unsplash.com/photo-1623164166615-ab65987f694a?auto=format&fit=crop&w=600&q=80" alt="Lush Green Valley Mountains Rice Terraces Terrain">
+                        <div class="visual-placeholder" id="img-samson">Sam Son Beach <span>Visual Profile Placeholder</span></div>
+                        <div class="visual-placeholder" id="img-hamrong">Ham Rong Bridge <span>Visual Profile Placeholder</span></div>
+                        <div class="visual-placeholder" id="img-citadel">Citadel of Ho Dynasty <span>Visual Profile Placeholder</span></div>
+                        <div class="visual-placeholder" id="img-puluong">Pu Luong Reserve <span>Visual Profile Placeholder</span></div>
                     </div>
                 </div>
             </div>
@@ -920,10 +936,10 @@
                         <span>Hover over a food row to view delicacy item preview...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <img id="img-nemchua" src="https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" alt="Vietnamese Banana Leaf Wrapper Fermented Meat Rolls">
-                        <img id="img-chatom" src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=600&q=80" alt="Grilled Asian Shrimp Cakes and Seafood Patties">
-                        <img id="img-banhrangbua" src="https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=600&q=80" alt="Steamed Rice Flour Cakes wrapped in banana leaves">
-                        <img id="img-chelam" src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=600&q=80" alt="Traditional Sticky Rice Flour Ginger Molasses Sweet Candy Cakes">
+                        <div class="visual-placeholder" id="img-nemchua">Nem Chua <span>Visual Profile Placeholder</span></div>
+                        <div class="visual-placeholder" id="img-chatom">Chả Tôm <span>Visual Profile Placeholder</span></div>
+                        <div class="visual-placeholder" id="img-banhrangbua">Bánh Răng Bừa <span>Visual Profile Placeholder</span></div>
+                        <div class="visual-placeholder" id="img-chelam">Chè Lam <span>Visual Profile Placeholder</span></div>
                     </div>
                 </div>
             </div>
@@ -1220,12 +1236,12 @@
                 
                 const popBox = document.getElementById(`${groupType}PopBox`);
                 const placeholder = document.getElementById(`placeholder-${groupType}`);
-                const targetImage = document.getElementById(`img-${targetId}`);
+                const targetPlaceholder = document.getElementById(`img-${targetId}`);
                 
-                if (targetImage) {
+                if (targetPlaceholder) {
                     placeholder.classList.add('hidden');
                     popBox.classList.add('has-image');
-                    targetImage.classList.add('visible');
+                    targetPlaceholder.classList.add('visible');
                 }
             });
             
@@ -1235,10 +1251,10 @@
                 
                 const popBox = document.getElementById(`${groupType}PopBox`);
                 const placeholder = document.getElementById(`placeholder-${groupType}`);
-                const targetImage = document.getElementById(`img-${targetId}`);
+                const targetPlaceholder = document.getElementById(`img-${targetId}`);
                 
-                if (targetImage) {
-                    targetImage.classList.remove('visible');
+                if (targetPlaceholder) {
+                    targetPlaceholder.classList.remove('visible');
                 }
                 
                 placeholder.classList.remove('hidden');
