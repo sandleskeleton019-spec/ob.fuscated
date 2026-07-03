@@ -480,7 +480,7 @@
             display: block;
         }
 
-        /* Pure Text Placeholders without full structural image cards */
+        /* Text/Media Placeholders */
         .text-placeholder {
             position: absolute;
             inset: 0;
@@ -489,20 +489,20 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 2rem;
             background: var(--card-bg);
             color: var(--heading-color);
             font-weight: 600;
             font-size: 1.1rem;
             opacity: 0;
             transition: opacity 0.3s ease;
+            overflow: hidden;
         }
 
-        .text-placeholder span {
-            font-size: 0.9rem;
-            font-weight: 400;
-            color: var(--text-color);
-            margin-top: 0.5rem;
+        .text-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .text-placeholder.visible {
@@ -878,10 +878,18 @@
                         <span>Hover over an attraction to view area profile...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <div class="text-placeholder" id="img-samson">Sam Son Beach <span>[<img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Sầm_Sơn_Beach_2022.jpg" alt="Sam Son Beach in Thanh Hoa, Vietnam" width="600" height="400">]</span></div>
-                        <div class="text-placeholder" id="img-hamrong">Ham Rong Bridge <span>[Placeholder Text]</span></div>
-                        <div class="text-placeholder" id="img-citadel">Citadel of Ho Dynasty <span>[Placeholder Text]</span></div>
-                        <div class="text-placeholder" id="img-puluong">Pu Luong Reserve <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-samson">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/S%E1%BB%A3m_S%C6%A1n_Beach_2022.jpg" alt="Sam Son Beach in Thanh Hoa, Vietnam" width="600" height="400">
+                        </div>
+                        <div class="text-placeholder" id="img-hamrong">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Ham_Rong_bridge.JPG" alt="Ham Rong Bridge across Ma River">
+                        </div>
+                        <div class="text-placeholder" id="img-citadel">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Citadel_of_the_H%E1%BB%93_Dynasty_-_South_gate.jpg" alt="South Gate of the Citadel of the Ho Dynasty">
+                        </div>
+                        <div class="text-placeholder" id="img-puluong">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Puluong_terrace_fields.jpg" alt="Terrace rice fields in Pu Luong Nature Reserve">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -931,10 +939,18 @@
                         <span>Hover over a food row to view delicacy item preview...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <div class="text-placeholder" id="img-nemchua">Nem Chua <span>[Placeholder Text]</span></div>
-                        <div class="text-placeholder" id="img-chatom">Chả Tôm <span>[Placeholder Text]</span></div>
-                        <div class="text-placeholder" id="img-banhrangbua">Bánh Răng Bừa <span>[Placeholder Text]</span></div>
-                        <div class="text-placeholder" id="img-chelam">Chè Lam <span>[Placeholder Text]</span></div>
+                        <div class="text-placeholder" id="img-nemchua">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Nem_chua_Thanh_H%C3%B3a.JPG" alt="Nem Chua Thanh Hoa">
+                        </div>
+                        <div class="text-placeholder" id="img-chatom">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Cha_tom_Thanh_Hoa.jpg" alt="Cha Tom shrimp cakes">
+                        </div>
+                        <div class="text-placeholder" id="img-banhrangbua">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Banh_rang_bua.jpg" alt="Banh Rang Bua wrap delicacy">
+                        </div>
+                        <div class="text-placeholder" id="img-chelam">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Che_lam_Phu_Quang.jpg" alt="Che Lam Phu Quang ginger sweet cake">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1046,7 +1062,7 @@
                     osc.stop(now + 0.3);
                 }
             } catch (e) {
-                console.warn("SFX failed to play due to audio context configuration: ", e);
+                console.warn("SFX failed to play: ", e);
             }
         }
 
@@ -1088,7 +1104,7 @@
                     playIcon.style.display = 'block';
                     volumeSliderWrapper.classList.add('visible');
                 }).catch(err => {
-                    console.log("Audio playback standard constraint block.", err);
+                    console.log("Audio playback constraints applied.", err);
                 });
             } else {
                 bgMusic.pause();
