@@ -867,10 +867,10 @@
                         <span>Hover over an attraction to view area profile...</span>
                     </div>
                     <div class="side-pop-image-frame">
-                        <img id="img-samson" src="https://images.unsplash.com/photo-1621546955030-cf2a91216d00?auto=format&fit=crop&w=600&q=80" alt="Sam Son Coastal Waves and Beach Landscape">
-                        <img id="img-hamrong" src="https://images.unsplash.com/photo-1578345218746-50a229b3d0f8?auto=format&fit=crop&w=600&q=80" alt="Ma River and Iron Railroad Bridge Infrastructure">
+                        <img id="img-samson" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Sam Son Coastal Waves and Beach Landscape">
+                        <img id="img-hamrong" src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=600&q=80" alt="Ma River and Iron Railroad Bridge Infrastructure">
                         <img id="img-citadel" src="https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?auto=format&fit=crop&w=600&q=80" alt="Historic Asian Stone Fortification Citadel Wall Ruins">
-                        <img id="img-puluong" src="https://images.unsplash.com/photo-1508193638397-1c4234db14d8?auto=format&fit=crop&w=600&q=80" alt="Lush Green Valley Mountains Rice Terraces Terrain">
+                        <img id="img-puluong" src="https://images.unsplash.com/photo-1623164166615-ab65987f694a?auto=format&fit=crop&w=600&q=80" alt="Lush Green Valley Mountains Rice Terraces Terrain">
                     </div>
                 </div>
             </div>
@@ -921,8 +921,8 @@
                     </div>
                     <div class="side-pop-image-frame">
                         <img id="img-nemchua" src="https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=600&q=80" alt="Vietnamese Banana Leaf Wrapper Fermented Meat Rolls">
-                        <img id="img-chatom" src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=600&q=80" alt="Grilled Asian Shrimp Cakes and Seafood Paddys">
-                        <img id="img-banhrangbua" src="https://images.unsplash.com/photo-1541696490-8744a5db7f34?auto=format&fit=crop&w=600&q=80" alt="Steamed Rice Flour Cakes in Wrapped Leaves">
+                        <img id="img-chatom" src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=600&q=80" alt="Grilled Asian Shrimp Cakes and Seafood Patties">
+                        <img id="img-banhrangbua" src="https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=600&q=80" alt="Steamed Rice Flour Cakes wrapped in banana leaves">
                         <img id="img-chelam" src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=600&q=80" alt="Traditional Sticky Rice Flour Ginger Molasses Sweet Candy Cakes">
                     </div>
                 </div>
@@ -982,7 +982,13 @@
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
+
+        window.addEventListener('click', initAudioContext, { once: true });
+        window.addEventListener('mouseenter', initAudioContext, { once: true });
 
         function playSynthSFX(type) {
             try {
@@ -997,7 +1003,6 @@
                 const now = audioCtx.currentTime;
 
                 if (type === 'hover') {
-                    // Soft, brief high note for hover
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(600, now);
                     osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
@@ -1006,7 +1011,6 @@
                     osc.start(now);
                     osc.stop(now + 0.08);
                 } else if (type === 'click' || type === 'toggle') {
-                    // Clean snappy toggle click
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(400, now);
                     osc.frequency.setValueAtTime(300, now + 0.03);
@@ -1015,7 +1019,6 @@
                     osc.start(now);
                     osc.stop(now + 0.12);
                 } else if (type === 'slider') {
-                    // Micro tick tone for real-time range movement
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(750, now);
                     gainNode.gain.setValueAtTime(0.02, now);
@@ -1023,10 +1026,9 @@
                     osc.start(now);
                     osc.stop(now + 0.02);
                 } else if (type === 'submit') {
-                    // Uplifting double-tone success chime
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, now); // C5
-                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(523.25, now); 
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); 
                     gainNode.gain.setValueAtTime(0.1, now);
                     gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
                     osc.start(now);
@@ -1099,33 +1101,54 @@
             }, 100);
         });
 
-        // 3. Flower Man Lyric Sync Subtitle Engine (Timestamps increased in speed by 20% -> divided by 1.20)
-        const flowerManLyrics = [
-            { time: 21.33, text: "Ten feet twenty the Flower Man." },
-            { time: 24.17, text: "Is waiting for the touch of his hand." },
-            { time: 27.08, text: "Straightening petals out without a plan." },
-            { time: 29.83, text: "Like the every daily." },
-            { time: 32.67, text: "Wish that bothers the Flower Man." },
-            { time: 35.50, text: "Could I do something to make him laugh?" },
-            { time: 38.42, text: "Inside my little chamber made of glass." },
-            { time: 41.33, text: "So he lived the..." },
-            { time: 44.00, text: "FLOWER MAN, FLOWER MAN!" },
-            { time: 46.83, text: "With his heart in the sand, so he stands!" },
-            { time: 49.67, text: "To watch the whole wide world from a can!" },
-            { time: 52.50, text: "Way up high in the sky, with the sun in his eyes!" },
-            { time: 55.33, text: "Ain't it nice, the life forever for... FLOWERS." }
+        // 3. Consolidated Canon Deltarune Lyrics Engine
+        const deltaruneLyrics = [
+            { time: 2.00,  text: "♪ Don't Forget ♪" },
+            { time: 4.50,  text: "When the light is running low..." },
+            { time: 7.80,  text: "...and the shadows start to grow," },
+            { time: 11.20, text: "And the places that you know seem like fantasy." },
+            { time: 18.00, text: "There's a light inside your soul..." },
+            { time: 21.50, text: "...that's still shining in the cold with the truth." },
+            { time: 26.50, text: "The promise in our hearts..." },
+            { time: 30.00, text: "Don't forget, I'm with you in the dark." },
+            { time: 40.00, text: "♪ Raise Up Your Bat ♪" },
+            { time: 43.00, text: "WHEN THE DEMON HEART IS CRYING!" },
+            { time: 46.20, text: "AND THE BLOOD IS GUSHING BRIGHT!" },
+            { time: 49.50, text: "RAISE UP YOUR BAT FOR THE BURNING FIGHT!" },
+            { time: 53.00, text: "WHEN YOUR HOPE IS SLOWLY DYING!" },
+            { time: 56.10, text: "AND YOUR FUTURE'S LOST ITS RIGHTS!" },
+            { time: 59.40, text: "RAISE UP YOUR BAT AND FACE THE FRIGHT!" },
+            { time: 62.50, text: "LET'S KNOCK 'EM DEAD INTO THE NIGHT!" },
+            { time: 66.00, text: "[Guitar Solo]" },
+            { time: 72.00, text: "Come follow me into the dark, with your heart as the ark..." },
+            { time: 78.50, text: "...which shall shine you the way." },
+            { time: 82.00, text: "Because I'm with you in the dark, with your heart as my mark..." },
+            { time: 88.50, text: "...which shall guide you the way, through the waves." },
+            { time: 105.00, text: "♪ Flower Man ♪" },
+            { time: 108.33, text: "Ten feet twenty, the Flower Man..." },
+            { time: 111.17, text: "...is waiting for the touch of his hand." },
+            { time: 114.08, text: "Straightening petals out without a plan..." },
+            { time: 116.83, text: "...like the every daily." },
+            { time: 119.67, text: "Wish that bothers the Flower Man:" },
+            { time: 122.50, text: "Could I do something to make him laugh..." },
+            { time: 125.42, text: "...inside my little chamber made of glass?" },
+            { time: 128.33, text: "So he lived the..." },
+            { time: 131.00, text: "FLOWER MAN, FLOWER MAN!" },
+            { time: 133.83, text: "With his heart in the sand, so he stands!" },
+            { time: 136.67, text: "To watch the whole wide world from a can!" },
+            { time: 139.50, text: "Way up high in the sky, with the sun in his eyes!" },
+            { time: 142.33, text: "Ain't it nice, the life forever for... FLOWERS." }
         ];
 
         let lastLineText = "";
 
         bgMusic.addEventListener('timeupdate', () => {
-            // Baseline shifted from +0.2s to +0.7s to start 0.5s sooner
-            const currentTime = bgMusic.currentTime + 0.7;
+            const currentTime = bgMusic.currentTime;
             
             let currentLine = null;
-            for (let i = 0; i < flowerManLyrics.length; i++) {
-                if (currentTime >= flowerManLyrics[i].time) {
-                    currentLine = flowerManLyrics[i];
+            for (let i = 0; i < deltaruneLyrics.length; i++) {
+                if (currentTime >= deltaruneLyrics[i].time) {
+                    currentLine = deltaruneLyrics[i];
                 } else {
                     break;
                 }
