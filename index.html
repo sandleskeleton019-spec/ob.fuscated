@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover Thanh Hoa City | Official Travel Portal</title>
+    <title>AETHER — Stream Matrix Node</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,42 +16,38 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
         }
 
         :root {
-            --bg-color: #f8fafc;
-            --text-color: #1e293b;
+            --bg-color: #f1f5f9;
+            --sidebar-bg: #ffffff;
+            --text-color: #334155;
             --card-bg: #ffffff;
             --border-color: #0f172a;
             --heading-color: #0f172a;
-            --box-gradient-start: rgba(56, 189, 248, 0.08);
-            --box-gradient-end: rgba(2, 132, 199, 0.15);
-            --nav-bg: rgba(15, 23, 42, 0.95);
-            --nav-text: #cbd5e1;
+            --accent-color: #a855f7;
             --bg-opacity: 0.03;
+            --player-bg: #ffffff;
         }
 
         [data-theme="dark"] {
-            --bg-color: #0c061a;
-            --text-color: #e2e8f0;
-            --card-bg: #140d2b;
+            --bg-color: #05020c;
+            --sidebar-bg: #0b0616;
+            --text-color: #cbd5e1;
+            --card-bg: #110922;
             --border-color: #5b21b6;
             --heading-color: #ffffff;
-            --box-gradient-start: rgba(2, 132, 199, 0.2);
-            --box-gradient-end: rgba(147, 51, 234, 0.3);
-            --nav-bg: rgba(20, 13, 43, 0.95);
-            --nav-text: #f1f5f9;
+            --accent-color: #c084fc;
             --bg-opacity: 0.45;
+            --player-bg: #0d071a;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.7;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
@@ -64,9 +60,8 @@
             height: 100vh;
             z-index: -2;
             pointer-events: none;
-            overflow: hidden;
             opacity: var(--bg-opacity);
-            background: linear-gradient(135deg, #16082c 0%, #06020f 100%);
+            background: linear-gradient(135deg, #120624 0%, #030107 100%);
             transition: opacity 0.4s ease;
         }
 
@@ -77,81 +72,402 @@
             background-size: 24px 24px;
         }
 
-        .static-backdrop-overlay {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 50%, transparent 10%, rgba(12, 6, 26, 0.85) 90%);
+        /* App Master Frame Layout */
+        .app-layout-frame {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 1fr 90px;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
         }
 
-        /* Streaming Portal Header Overlay Background video */
-        .stream-background-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .stream-background-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.25;
-        }
-
-        /* Control Toggles */
-        .control-panel {
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 2000;
+        /* Sidebar Panel Navigation */
+        .sidebar-panel {
+            background-color: var(--sidebar-bg);
+            border-right: 2px solid var(--border-color);
+            padding: 2rem 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            align-items: flex-start;
+            gap: 2rem;
+            z-index: 20;
+            transition: background-color 0.4s, border-color 0.4s;
         }
 
-        .control-row {
+        .brand-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--heading-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .theme-toggle-btn {
+        .brand-header h2::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-color);
+            display: inline-block;
+        }
+
+        .nav-group-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-radius: 0px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item-link:hover, .nav-item-link.active-node {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--accent-color);
+            transform: translateX(4px);
+            box-shadow: -4px 4px 0px var(--border-color);
+        }
+
+        /* Main Workspace Window scrollable content */
+        .workspace-viewport {
+            padding: 2.5rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .workspace-header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workspace-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--heading-color);
+            letter-spacing: -1px;
+        }
+
+        /* Dynamic Main Grid System */
+        .content-grid-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .dashboard-main-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .shelf-row h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.25rem;
+            color: var(--heading-color);
+            font-weight: 700;
+        }
+
+        .track-cards-shelf {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Spotify-style Brutalist Track Cards */
+        .audio-deck-card {
             background: var(--card-bg);
             border: 2px solid var(--border-color);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            padding: 1.25rem;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .audio-deck-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 6px 6px 0px var(--border-color);
+        }
+
+        .card-art-frame {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #4c1d95 0%, #1e1b4b 100%);
+            margin-bottom: 1rem;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-deck-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--heading-color);
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .audio-deck-card p {
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        /* Sidebar Metadata Queue Context Frame */
+        .queue-context-panel {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            box-shadow: 6px 6px 0px var(--border-color);
+            padding: 1.5rem;
+            position: sticky;
+            top: 0;
+        }
+
+        .queue-context-panel h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--heading-color);
+        }
+
+        .queue-stack-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .queue-item-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .queue-mini-art {
+            width: 40px;
+            height: 40px;
+            background: var(--border-color);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .queue-row-details h5 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--heading-color);
+        }
+
+        .queue-row-details p {
+            font-size: 0.75rem;
+            color: var(--text-color);
+        }
+
+        /* Continuous Bottom Master Broadcast Player Bar */
+        .broadcast-playback-bar {
+            grid-column: span 2;
+            background-color: var(--player-bg);
+            border-top: 2px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 100;
+            transition: background-color 0.4s, border-color 0.4s;
+        }
+
+        /* Current Track Meta Cluster */
+        .active-track-cluster {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .master-player-art {
+            width: 55px;
+            height: 55px;
+            border: 2px solid var(--border-color);
+            background: #2e1065;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .master-track-meta h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--heading-color);
+        }
+
+        .master-track-meta p {
+            font-size: 0.8rem;
+            color: var(--text-color);
+        }
+
+        /* Navigation Execution Deck Controls */
+        .deck-execution-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .deck-buttons-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .deck-action-btn {
+            background: none;
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 4px 4px 0px var(--border-color);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.4s, border-color 0.4s;
         }
 
-        .theme-toggle-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--border-color);
-        }
-
-        .theme-toggle-btn:active {
-            transform: translate(0, 0);
-            box-shadow: 2px 2px 0px var(--border-color);
-        }
-
-        .theme-toggle-btn svg {
+        .deck-action-btn svg {
             width: 20px;
             height: 20px;
             fill: none;
             stroke: var(--text-color);
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: stroke 0.4s;
+            transition: stroke 0.2s;
+        }
+
+        .deck-action-btn:hover svg {
+            stroke: var(--accent-color);
+        }
+
+        .deck-action-btn.master-play-node {
+            background: var(--heading-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+        }
+
+        .deck-action-btn.master-play-node svg {
+            stroke: var(--bg-color);
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Tracker Timeline Element Slider */
+        .timeline-delivery-slider-container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .playback-progress-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .playback-progress-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        /* Localized Hardware Aux Control Dock Panel */
+        .hardware-aux-control-dock {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .aux-volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100px;
+            height: 4px;
+            background: var(--border-color);
+            outline: none;
+            border-radius: 2px;
+        }
+
+        .aux-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        /* System Control Core Toggle Buttons */
+        .utility-toggle-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0px var(--border-color);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .utility-toggle-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--border-color);
+        }
+
+        .utility-toggle-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: var(--text-color);
+            stroke-width: 2;
         }
 
         [data-theme="dark"] .sun-icon,
@@ -159,66 +475,20 @@
             display: none;
         }
 
-        /* Slide-out Volume Slider Wrapper */
-        .volume-container {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 0 0.75rem;
-            height: 45px;
-            box-shadow: 4px 4px 0px var(--border-color);
-            opacity: 0;
-            transform: translateX(-20px);
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .volume-container.visible {
-            opacity: 1;
-            transform: translateX(0);
-            pointer-events: auto;
-        }
-
-        .volume-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 80px;
-            height: 6px;
-            background: var(--border-color);
-            outline: none;
-            border-radius: 3px;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #a855f7;
-            cursor: pointer;
-            border: 2px solid var(--border-color);
-        }
-
-        /* Persistent Karaoke Subtitle Display HUD overlay */
+        /* Global HUD Overlay Module Banner */
         .subtitle-hud-banner {
             position: fixed;
-            bottom: 2rem;
+            bottom: 110px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1500;
             background: rgba(12, 6, 26, 0.95);
-            border: 2px solid #a855f7;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            min-width: 320px;
-            max-width: 90%;
+            border: 2px solid var(--accent-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             pointer-events: none;
-            transition: opacity 0.3s ease, border-color 0.4s;
+            transition: opacity 0.3s ease;
             opacity: 0;
         }
 
@@ -227,579 +497,46 @@
         }
 
         .subtitle-hud-banner p {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            color: #c084fc;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
-            letter-spacing: 0.5px;
-            transition: opacity 0.15s ease;
+            color: var(--accent-color);
         }
 
-        /* Custom Interactive Mouse Cursor Glow Effect */
+        /* Interactive Custom Mouse Glow Effect */
         .cursor-glow {
             position: fixed;
             top: 0;
             left: 0;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 70%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
             transform: translate(-50%, -50%);
             z-index: 9999;
-            mix-blend-mode: screen;
-            transition: opacity 0.3s ease;
             opacity: 0;
+            transition: opacity 0.3s;
         }
 
         body:hover .cursor-glow {
             opacity: 1;
         }
 
-        /* Ambient Background Elements */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 800px;
-            height: 800px;
-            border-radius: 50%;
-            z-index: -1;
-            filter: blur(60px);
-            mix-blend-mode: screen;
-            opacity: 0.4;
-        }
-
-        body::before {
-            top: 10%;
-            right: -10%;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, rgba(219, 39, 119, 0.06) 50%, transparent 70%);
-        }
-
-        body::after {
-            top: 50%;
-            left: -10%;
-            background: radial-gradient(circle, rgba(109, 40, 217, 0.1) 0%, rgba(6, 182, 212, 0.06) 60%, transparent 70%);
-        }
-
-        /* Sticky Navigation */
-        nav {
-            background-color: var(--nav-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 0.75rem 1.5rem;
-            margin: 1.5rem auto;
-            width: max-content;
-            max-width: 90%;
-            border-radius: 100px;
-            position: sticky;
-            top: 1.5rem;
-            z-index: 1000;
-            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.3);
-            border: 2px solid var(--border-color);
-            animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transition: background-color 0.4s, border-color 0.4s;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 0.25rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        nav ul a {
-            color: var(--nav-text);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            padding: 0.6rem 1.2rem;
-            border-radius: 100px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            white-space: nowrap;
-            display: inline-block;
-        }
-
-        nav ul a:hover {
-            color: #c084fc; 
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
-        }
-
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #0c061a 0%, #140d2b 100%);
-            color: white;
-            text-align: center;
-            padding: 14rem 2rem;
-            position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-            border-bottom: 4px solid var(--border-color);
-            overflow: hidden;
-            transition: border-color 0.4s;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 30% 30%, rgba(109, 40, 217, 0.25) 0%, transparent 40%),
-                radial-gradient(circle at 70% 60%, rgba(219, 39, 119, 0.2) 0%, transparent 45%),
-                radial-gradient(circle at 50% 40%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
-            filter: blur(40px);
-            z-index: 1;
-        }
-
-        .title-culling-wrapper {
-            position: relative;
-            z-index: 2;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-            will-change: transform, opacity;
-        }
-
-        .title-culled {
-            opacity: 0;
-            transform: translateY(-30px) scale(0.95);
-            pointer-events: none;
-        }
-
-        header h1 {
-            font-size: 4.5rem;
-            font-weight: 800;
-            margin-bottom: 1.2rem;
-            color: #ffffff;
-            letter-spacing: -1.5px;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards, gentleFloat 4s ease-in-out infinite alternate;
-        }
-
-        header p {
-            font-size: 1.25rem;
-            font-weight: 300;
-            max-width: 700px;
-            margin: 0 auto;
-            color: #cbd5e1;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
-        }
-
-        /* Container & Grid Sections */
-        .container {
-            max-width: 1100px;
-            margin: -2rem auto 0 auto; 
-            padding: 0 1.5rem 6rem 1.5rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        section {
-            margin-bottom: 6rem;
-        }
-
-        h2 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--heading-color);
-            margin-bottom: 2.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            letter-spacing: -0.5px;
-            transition: color 0.4s;
-        }
-
-        h2::before {
-            content: '';
-            width: 14px;
-            height: 14px;
-            background-color: #a855f7;
-            display: inline-block;
-            flex-shrink: 0;
-            animation: pulseSquare 2s infinite ease-in-out;
-        }
-
-        .split-layout {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 2.5rem;
-            align-items: start;
-        }
-
-        .left-stack-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 0px; 
-            overflow: hidden;
-            box-shadow: 0 4px 30px rgba(15, 23, 42, 0.03);
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s, border-color 0.4s;
-        }
-
-        .card:hover {
-            transform: translateX(8px);
-            box-shadow: -6px 6px 0px var(--border-color);
-        }
-
-        .card-content {
-            padding: 2rem;
-        }
-
-        .card-content h3 {
-            color: var(--heading-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.3rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            transition: color 0.3s ease;
-        }
-
-        .card:hover .card-content h3 {
-            color: #c084fc;
-        }
-
-        .card-content p {
-            font-size: 0.95rem;
-            color: var(--text-color);
-            transition: color 0.4s;
-        }
-
-        .side-pop-container {
-            position: sticky;
-            top: 7rem;
-            width: 100%;
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-color);
-            box-shadow: 8px 8px 0px var(--border-color);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.4s, border-color 0.4s;
-            height: 250px;
-        }
-
-        .side-pop-container.has-image {
-            height: 250px;
-        }
-
-        .side-pop-image-frame {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            display: block;
-        }
-
-        /* Text/Media Placeholders */
-        .text-placeholder {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: var(--card-bg);
-            color: var(--heading-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            overflow: hidden;
-        }
-
-        .text-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .text-placeholder.visible {
-            opacity: 1;
-            z-index: 1;
-        }
-
-        .default-frame-placeholder {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-            font-size: 0.95rem;
-            color: #8b5cf6;
-            font-weight: 500;
-            background: var(--card-bg);
-            transition: opacity 0.3s ease, background-color 0.4s;
-            z-index: 2;
-        }
-
-        .default-frame-placeholder.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .specialty-section {
-            background-color: var(--bg-color);
-            padding: 4rem 3rem;
-            border-radius: 0px;
-            border: 2px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-            transition: background-color 0.4s, border-color 0.4s;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 0px;
-            border: 2px solid var(--border-color);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            transition: border-color 0.4s;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            transition: background-color 0.4s;
-        }
-
-        th, td {
-            padding: 1.2rem 1.5rem;
-            text-align: left;
-            font-size: 0.95rem;
-            color: var(--text-color);
-            transition: color 0.4s;
-        }
-
-        th {
-            background-color: var(--border-color);
-            color: var(--bg-color);
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background-color 0.4s, color 0.4s;
-        }
-
-        td strong {
-            font-size: 1rem;
-            color: var(--heading-color);
-            font-weight: 600;
-            transition: color 0.4s;
-        }
-
-        tr.specialty-row {
-            border-bottom: 2px solid var(--bg-color);
-            cursor: pointer;
-            transition: border-color 0.4s;
-        }
-
-        tr.specialty-row:last-child {
-            border-bottom: none;
-        }
-
-        tr.specialty-row:hover td {
-            background-color: rgba(167, 139, 250, 0.1);
-            transform: translateX(4px);
-        }
-
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 2rem;
-        }
-
-        .tip-box {
-            position: relative;
-            background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
-            padding: 2.5rem 2rem;
-            border-radius: 0px; 
-            border: 2px solid var(--border-color);
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-        }
-
-        .tip-box::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: 
-                linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-            background-size: 16px 16px;
-            pointer-events: none;
-            z-index: 1;
-            transform: perspective(200px) rotateX(10deg) scale(1.2);
-            transform-origin: top;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .tip-box h4 {
-            font-size: 1.3rem;
-            color: #ffffff;
-            margin-bottom: 0px; 
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            position: relative;
-            z-index: 3;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            transition: margin 0.3s ease;
-        }
-
-        .tip-box p {
-            font-size: 0.95rem;
-            color: #f1f5f9;
-            position: relative;
-            z-index: 3;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: opacity 0.3s ease, max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.3s ease;
-            margin-top: 0px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-
-        .tip-box:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 8px 8px 0px var(--border-color);
-            border-color: var(--border-color);
-        }
-
-        .tip-box:hover h4 {
-            margin-bottom: 0.6rem;
-        }
-
-        .tip-box:hover p {
-            opacity: 1;
-            max-height: 120px; 
-            margin-top: 0.5rem;
-        }
-
-        .contact-form {
-            background: var(--card-bg);
-            padding: 3.5rem;
-            border-radius: 0px;
-            border: 2px solid var(--border-color);
-            max-width: 600px;
-            margin: 0 auto;
-            box-shadow: 4px 4px 0px var(--border-color);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s, border-color 0.4s;
-        }
-
-        .contact-form:focus-within {
-            transform: scale(1.01);
-            box-shadow: 8px 8px 0px #a855f7;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--heading-color);
-            transition: color 0.4s;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 0px;
-            font-size: 0.95rem;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            background-color: var(--card-bg);
-            border-color: #a855f7;
-            transform: translateY(-2px);
-        }
-
-        .submit-btn {
-            background-color: var(--border-color);
-            color: var(--bg-color);
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 0px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: 2px solid var(--border-color);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .submit-btn:hover {
-            background-color: #a855f7;
-            color: #ffffff;
-            border-color: #a855f7;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.2);
-        }
-
-        /* Animations */
-        @keyframes slideDown {
-            from { transform: translateY(-150%); }
-            to { transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes gentleFloat {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-10px); }
-        }
-
-        @keyframes pulseSquare {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; background-color: #c084fc; }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px) scale(0.98);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        footer {
-            background-color: #0c061a;
-            color: #94a3b8;
-            text-align: center;
-            padding: 3rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-top: 2px solid var(--border-color);
-        }
-
         @media (max-width: 900px) {
-            .split-layout {
+            .app-layout-frame {
                 grid-template-columns: 1fr;
             }
-            .side-pop-container {
-                display: none !important; 
+            .sidebar-panel, .queue-context-panel {
+                display: none !important;
+            }
+            .broadcast-playback-bar {
+                grid-template-columns: 1fr;
+                justify-content: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+            .active-track-cluster, .hardware-aux-control-dock {
+                display: none;
             }
         }
     </style>
@@ -808,523 +545,309 @@
 
     <div class="static-backdrop-container">
         <div class="static-backdrop-layer"></div>
-        <div class="static-backdrop-overlay"></div>
     </div>
 
-    <div class="control-panel">
-        <button class="theme-toggle-btn" id="themeSwitchNode" aria-label="Toggle structural dark theme layout">
-            <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-            <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
-        </button>
+    <div class="cursor-glow" id="mouseGlow"></div>
 
-        <div class="control-row">
-            <button class="theme-toggle-btn" id="audioToggleNode" aria-label="Toggle background track stream audio">
-                <svg class="mute-icon" viewBox="0 0 24 24" style="display: block;"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>
-                <svg class="play-icon" viewBox="0 0 24 24" style="display: none;"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-            </button>
+    <audio id="bgMusic" crossorigin="anonymous" loop>
+        <source src="https://stream.live.vc.bbc.co.uk/bbc_radio_foyle" type="audio/mpeg">
+    </audio>
 
-            <div class="volume-container" id="volumeSliderWrapper">
-                <input type="range" class="volume-slider" id="volumeControlNode" min="0" max="1" step="0.05" value="0.20">
+    <div class="app-layout-frame">
+        
+        <aside class="sidebar-panel">
+            <div class="brand-header">
+                <h2>AETHER</h2>
             </div>
-        </div>
+            
+            <ul class="nav-group-list">
+                <li><a href="#" class="nav-item-link active-node">Discover Streams</a></li>
+                <li><a href="#" class="nav-item-link">Sound Archival</a></li>
+                <li><a href="#" class="nav-item-link">Nodes & Frequency</a></li>
+                <li><a href="#" class="nav-item-link">Telemetry Log</a></li>
+            </ul>
+        </aside>
+
+        <main class="workspace-viewport">
+            <header class="workspace-header">
+                <h1>Matrix Node Broadcast</h1>
+                
+                <button class="utility-toggle-btn" id="themeSwitchNode" aria-label="Toggle layout theme profile">
+                    <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                </button>
+            </header>
+
+            <div class="content-grid-wrapper">
+                
+                <div class="dashboard-main-stack">
+                    
+                    <section class="shelf-row">
+                        <h3>Primary Network Channels</h3>
+                        <div class="track-cards-shelf">
+                            
+                            <div class="audio-deck-card stream-select-trigger" data-title="Station Alpha: Coastwave" data-artist="Generative Modular Ambient">
+                                <div class="card-art-frame">α</div>
+                                <h4>Station Alpha: Coastwave</h4>
+                                <p>Generative Modular Ambient</p>
+                            </div>
+
+                            <div class="audio-deck-card stream-select-trigger" data-title="Station Beta: Industrial" data-artist="Sub-Harmonic Percussion Matrix">
+                                <div class="card-art-frame" style="background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);">β</div>
+                                <h4>Station Beta: Industrial</h4>
+                                <p>Sub-Harmonic Percussion</p>
+                            </div>
+
+                            <div class="audio-deck-card stream-select-trigger" data-title="Station Gamma: Monolith" data-artist="Dark Physical Synthesis Drone">
+                                <div class="card-art-frame" style="background: linear-gradient(135deg, #0f172a 0%, #581c87 100%);">γ</div>
+                                <h4>Station Gamma: Monolith</h4>
+                                <p>Dark Physical Synthesis</p>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="shelf-row">
+                        <h3>Your Curated Library</h3>
+                        <div class="track-cards-shelf">
+                            
+                            <div class="audio-deck-card stream-select-trigger" data-title="Cyber Resonance" data-artist="Glitch Matrix Ensemble">
+                                <div class="card-art-frame" style="background: linear-gradient(135deg, #065f46 0%, #022c22 100%);">M1</div>
+                                <h4>Cyber Resonance</h4>
+                                <p>Glitch Matrix Ensemble</p>
+                            </div>
+
+                            <div class="audio-deck-card stream-select-trigger" data-title="Neon Horizon" data-artist="Synthwave Core Architecture">
+                                <div class="card-art-frame" style="background: linear-gradient(135deg, #9d174d 0%, #4c0519 100%);">M2</div>
+                                <h4>Neon Horizon</h4>
+                                <p>Synthwave Core</p>
+                            </div>
+
+                            <div class="audio-deck-card stream-select-trigger" data-title="Subsurface Echo" data-artist="Hydro-Acoustic Lab">
+                                <div class="card-art-frame" style="background: linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%);">M3</div>
+                                <h4>Subsurface Echo</h4>
+                                <p>Hydro-Acoustic Lab</p>
+                            </div>
+
+                            <div class="audio-deck-card stream-select-trigger" data-title="Static Clouds" data-artist="Lo-Fi Grain Generator">
+                                <div class="card-art-frame" style="background: linear-gradient(135deg, #b45309 0%, #451a03 100%);">M4</div>
+                                <h4>Static Clouds</h4>
+                                <p>Lo-Fi Grain Gen</p>
+                            </div>
+
+                        </div>
+                    </section>
+                </div>
+
+                <div class="queue-context-panel">
+                    <h3>Playback Stream Queue</h3>
+                    <div class="queue-stack-list" id="dynamicQueueStack">
+                        <div class="queue-item-row">
+                            <div class="queue-mini-art" id="queueMiniArt">α</div>
+                            <div class="queue-row-details">
+                                <h5 id="queueTrackTitle">Station Alpha: Coastwave</h5>
+                                <p>Active Broadcasting Stream</p>
+                            </div>
+                        </div>
+                        <div class="queue-item-row" style="opacity: 0.5;">
+                            <div class="queue-mini-art">β</div>
+                            <div class="queue-row-details">
+                                <h5>Station Beta: Industrial</h5>
+                                <p>Pending Next Initialization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="broadcast-playback-bar">
+            
+            <div class="active-track-cluster">
+                <div class="master-player-art" id="currentTrackArt">α</div>
+                <div class="master-track-meta">
+                    <h4 id="currentTrackTitle">Station Alpha: Coastwave</h4>
+                    <p id="currentTrackArtist">Generative Modular Ambient</p>
+                </div>
+            </div>
+
+            <div class="deck-execution-controls">
+                <div class="deck-buttons-row">
+                    <button class="deck-action-btn" aria-label="Previous Track">
+                        <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="4" x2="5" y2="20"></line></svg>
+                    </button>
+                    
+                    <button class="deck-action-btn master-play-node" id="audioToggleNode" aria-label="Toggle Stream Broadcast">
+                        <svg class="mute-icon" viewBox="0 0 24 24" style="display: none; stroke: #fff;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        <svg class="play-icon" viewBox="0 0 24 24" style="display: block; stroke: #fff;"><path d="M8 5v14l11-7z"/></svg>
+                    </button>
+                    
+                    <button class="deck-action-btn" aria-label="Next Track">
+                        <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="4" x2="19" y2="20"></line></svg>
+                    </button>
+                </div>
+
+                <div class="timeline-delivery-slider-container">
+                    <span id="timeElapsedDisplay">0:00</span>
+                    <input type="range" class="playback-progress-range" id="progressTrackNode" min="0" max="100" value="0">
+                    <span id="timeTotalDisplay">Live</span>
+                </div>
+            </div>
+
+            <div class="hardware-aux-control-dock">
+                <svg viewBox="0 0 24 24" style="width:16px; height:16px; fill:none; stroke:var(--text-color); stroke-width:2;"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <input type="range" class="aux-volume-slider" id="volumeControlNode" min="0" max="1" step="0.05" value="0.20">
+            </div>
+
+        </footer>
+
     </div>
 
     <div class="subtitle-hud-banner" id="subtitleHudDisplay">
         <p id="subtitleHudText"></p>
     </div>
 
-    <div class="cursor-glow" id="mouseGlow"></div>
-
-    <nav>
-        <ul>
-            <li><a href="#attractions" class="nav-link">Attractions</a></li>
-            <li><a href="#specialties" class="nav-link">Specialties</a></li>
-            <li><a href="#tips" class="nav-link">Travel Tips</a></li>
-            <li><a href="#contact" class="nav-link">Inquire</a></li>
-        </ul>
-    </nav>
-
-    <header id="hero-header">
-        <div class="stream-background-container">
-            <video id="bgMusic" autoplay loop muted playsinline>
-                <source src="Flower Man.mp4" type="video/mp4">
-            </video>
-        </div>
-        
-        <div class="title-culling-wrapper" id="headerCullingContent">
-            <h1>Thanh Hoa City</h1>
-            <p>Discover historic citadels, sun-drenched coastlines, and a rich culinary tradition in Central Vietnam.</p>
-        </div>
-    </header>
-
-    <div class="container">
-        
-        <section id="attractions" class="reveal">
-            <h2>Top Attractions</h2>
-            
-            <div class="split-layout">
-                <div class="left-stack-list">
-                    <div class="card interactive-trigger" data-target="samson" data-group="attraction">
-                        <div class="card-content">
-                            <h3>Sam Son Beach</h3>
-                            <p>Located just 16km from the city center, this iconic 9km coastline is famous for its golden sand, gentle waves, and historic Truong Le Mountain shrines.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card interactive-trigger" data-target="hamrong" data-group="attraction">
-                        <div class="card-content">
-                            <h3>Ham Rong Bridge</h3>
-                            <p>Spanning the Ma River, this landmark stands right inside the city bounds as an indomitable architectural icon of history and resilience.</p>
-                        </div>
-                    </div>
-
-                    <div class="card interactive-trigger" data-target="citadel" data-group="attraction">
-                        <div class="card-content">
-                            <h3>Citadel of the Ho Dynasty</h3>
-                            <p>A recognized UNESCO World Heritage site constructed from enormous, precisely carved stone blocks without the use of mortar.</p>
-                        </div>
-                    </div>
-
-                    <div class="card interactive-trigger" data-target="puluong" data-group="attraction">
-                        <div class="card-content">
-                            <h3>Pu Luong Nature Reserve</h3>
-                            <p>A spectacular highland getaway featuring sweeping green rice terraces, traditional stilt villages, and pristine jungle trekking routes.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="side-pop-container" id="attractionPopBox">
-                    <div class="default-frame-placeholder" id="placeholder-attraction">
-                        <span>Hover over an attraction to view area profile...</span>
-                    </div>
-                    <div class="side-pop-image-frame">
-                        <div class="text-placeholder" id="img-samson">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/S%E1%BB%A3m_S%C6%A1n_Beach_2022.jpg" alt="Sam Son Beach in Thanh Hoa, Vietnam" width="600" height="400">
-                        </div>
-                        <div class="text-placeholder" id="img-hamrong">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Ham_Rong_bridge.JPG" alt="Ham Rong Bridge across Ma River">
-                        </div>
-                        <div class="text-placeholder" id="img-citadel">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Citadel_of_the_H%E1%BB%93_Dynasty_-_South_gate.jpg" alt="South Gate of the Citadel of the Ho Dynasty">
-                        </div>
-                        <div class="text-placeholder" id="img-puluong">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Puluong_terrace_fields.jpg" alt="Terrace rice fields in Pu Luong Nature Reserve">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="specialties" class="specialty-section reveal">
-            <h2>Local Culinary Specialties</h2>
-            <p style="margin-bottom: 2rem;">The unique geography of Thanh Hoa yields incredible combinations of sweet, tangy, and savory street delicacies.</p>
-            
-            <div class="split-layout">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                               <th>Specialty</th>
-                               <th>Description</th>
-                               <th>Flavor Profile</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="specialty-row interactive-trigger" data-target="nemchua" data-group="culinary">
-                                <td><strong>Nem Chua</strong></td>
-                                <td>Thanh Hoa's signature minced pork roll fermented naturally in tight banana leaves.</td>
-                                <td>Tangy, sharp, and firmly chewy.</td>
-                            </tr>
-                            <tr class="specialty-row interactive-trigger" data-target="chatom" data-group="culinary">
-                                <td><strong>Chả Tôm</strong></td>
-                                <td>Freshly caught ground shrimp patties wrapped inside crisp rice sheets, grilled directly over charcoal.</td>
-                                <td>Crispy outer layer with a smoky, sweet interior.</td>
-                            </tr>
-                            <tr class="specialty-row interactive-trigger" data-target="banhrangbua" data-group="culinary">
-                                <td><strong>Bánh Răng Bừa</strong></td>
-                                <td>A delicate steamed rice flour wrap packed with savory minced pork and wood-ear mushrooms.</td>
-                                <td>Soft, silky, and deeply aromatic.</td>
-                            </tr>
-                            <tr class="specialty-row interactive-trigger" data-target="chelam" data-group="culinary">
-                                <td><strong>Chè Lam Phú Quảng</strong></td>
-                                <td>Traditional cake confection blocks made using roasted sticky rice flour, molasses, and fresh ginger.</td>
-                                <td>Densely chewy and sweet with a ginger kick.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="side-pop-container" id="culinaryPopBox">
-                    <div class="default-frame-placeholder" id="placeholder-culinary">
-                        <span>Hover over a food row to view delicacy item preview...</span>
-                    </div>
-                    <div class="side-pop-image-frame">
-                        <div class="text-placeholder" id="img-nemchua">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Nem_chua_Thanh_H%C3%B3a.JPG" alt="Nem Chua Thanh Hoa">
-                        </div>
-                        <div class="text-placeholder" id="img-chatom">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Cha_tom_Thanh_Hoa.jpg" alt="Cha Tom shrimp cakes">
-                        </div>
-                        <div class="text-placeholder" id="img-banhrangbua">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Banh_rang_bua.jpg" alt="Banh Rang Bua wrap delicacy">
-                        </div>
-                        <div class="text-placeholder" id="img-chelam">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Che_lam_Phu_Quang.jpg" alt="Che Lam Phu Quang ginger sweet cake">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tips" class="reveal">
-            <h2>Essential Travel Tips</h2>
-            <div class="tips-grid">
-                <div class="tip-box">
-                    <h4>Best Time to Visit</h4>
-                    <p>April to August is ideal for enjoying the coastal waters of Sam Son. Go between September and November for hiking in Pu Luong.</p>
-                </div>
-                <div class="tip-box">
-                    <h4>Getting Around</h4>
-                    <p>Metered taxis and ride-hailing apps operate smoothly within the city. Renting a motorbike is great for scenic highway cruising.</p>
-                </div>
-                <div class="tip-box">
-                    <h4>Souvenir Shopping</h4>
-                    <p>Always pick up packs of Nem Chua to take home. Most local shops bundle them in batches of 10 or 20 rolls.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="reveal">
-            <h2>Plan Your Journey</h2>
-            <p style="text-align: center; margin-bottom: 2rem; color: #64748b; font-size: 0.95rem;">Have questions about local accommodations or tour guides? Get in touch with us.</p>
-            
-            <form class="contact-form" id="journeyForm">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" required placeholder="John Doe">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" required placeholder="john@example.com">
-                </div>
-                <div class="form-group">
-                    <label for="message">Your Inquiry</label>
-                    <textarea id="message" rows="5" required placeholder="What would you like to know about Thanh Hoa?"></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Send Inquiry</button>
-            </form>
-        </section>
-
-    </div>
-
-    <footer>
-        <p>© 2026 LOCAL GUIDE PORTAL — EXPERIENCE THANH HOA. ALL RIGHTS RESERVED.</p>
-    </footer>
-
     <script>
-        // --- Web Audio API Synth Core for UI SFX Engine ---
+        // --- Web Audio SFX Deck Core ---
         let audioCtx = null;
-
         function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
         }
-
         window.addEventListener('click', initAudioContext, { once: true });
-        window.addEventListener('mouseenter', initAudioContext, { once: true });
 
         function playSynthSFX(type) {
             try {
                 initAudioContext();
                 if (!audioCtx || audioCtx.state === 'suspended') return;
-
                 const osc = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
                 const now = audioCtx.currentTime;
 
                 if (type === 'hover') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, now);
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(600, now);
                     osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
-                    gainNode.gain.setValueAtTime(0.04, now);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-                    osc.start(now);
-                    osc.stop(now + 0.08);
-                } else if (type === 'click' || type === 'toggle') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(400, now);
-                    osc.frequency.setValueAtTime(300, now + 0.03);
-                    gainNode.gain.setValueAtTime(0.12, now);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-                    osc.start(now);
-                    osc.stop(now + 0.12);
-                } else if (type === 'slider') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(750, now);
-                    gainNode.gain.setValueAtTime(0.02, now);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
-                    osc.start(now);
-                    osc.stop(now + 0.02);
-                } else if (type === 'submit') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, now); 
-                    osc.frequency.setValueAtTime(659.25, now + 0.1); 
-                    gainNode.gain.setValueAtTime(0.1, now);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
+                    gain.gain.setValueAtTime(0.02, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now); osc.stop(now + 0.08);
+                } else if (type === 'click') {
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.start(now); osc.stop(now + 0.1);
                 }
-            } catch (e) {
-                console.warn("SFX omitted background: ", e);
-            }
+            } catch(e){}
         }
 
-        // 1. Dark Theme Management Script Engine
+        // 1. Dark Theme Context System 
         const themeSwitchNode = document.getElementById('themeSwitchNode');
         themeSwitchNode.addEventListener('click', () => {
-            playSynthSFX('toggle');
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
+            playSynthSFX('click');
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
         });
 
-        // 2. Automated Media Streaming Integration Layout Engine
+        // 2. Automated Media Streaming Core Logic Execution Engine
         const audioToggle = document.getElementById('audioToggleNode');
         const bgMusic = document.getElementById('bgMusic');
-        const muteIcon = audioToggle.querySelector('.mute-icon');
-        const playIcon = audioToggle.querySelector('.play-icon');
-        const volumeSliderWrapper = document.getElementById('volumeSliderWrapper');
+        const muteIcon = audioToggle.querySelector('.mute-icon'); // Shows Pause symbols
+        const playIcon = audioToggle.querySelector('.play-icon'); // Shows Play arrow
         const volumeControlNode = document.getElementById('volumeControlNode');
+        const progressTrackNode = document.getElementById('progressTrackNode');
+        const timeElapsedDisplay = document.getElementById('timeElapsedDisplay');
         const subtitleHudDisplay = document.getElementById('subtitleHudDisplay');
         const subtitleHudText = document.getElementById('subtitleHudText');
 
-        // Master Volume Setup Configuration
         let volumeTarget = 0.20;
         bgMusic.volume = volumeTarget;
 
-        // Auto Stream Activation Sequence Hook
-        window.addEventListener('DOMContentLoaded', () => {
-            bgMusic.play().catch(err => {
-                console.log("Autoplay context execution pending client fallback gesture interaction.", err);
-            });
-        });
-
-        // Fallback global handler to unmute audio if block was enforced
-        function genericUnmuteInteractionFallback() {
-            if (bgMusic.muted) {
-                bgMusic.muted = false;
-                bgMusic.volume = volumeTarget;
-                muteIcon.style.display = 'none';
+        function syncPlayButtonState() {
+            if (bgMusic.paused) {
                 playIcon.style.display = 'block';
-                volumeSliderWrapper.classList.add('visible');
+                muteIcon.style.display = 'none';
+            } else {
+                playIcon.style.display = 'none';
+                muteIcon.style.display = 'block';
             }
-            window.removeEventListener('click', genericUnmuteInteractionFallback);
-            window.removeEventListener('scroll', genericUnmuteInteractionFallback);
         }
-        window.addEventListener('click', genericUnmuteInteractionFallback);
-        window.addEventListener('scroll', genericUnmuteInteractionFallback);
+
+        audioToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playSynthSFX('click');
+            
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    syncPlayButtonState();
+                }).catch(err => console.log("Stream navigation block encounter: ", err));
+            } else {
+                bgMusic.pause();
+                syncPlayButtonState();
+            }
+        });
 
         volumeControlNode.addEventListener('input', (e) => {
             volumeTarget = e.target.value;
             bgMusic.volume = volumeTarget;
-            if(bgMusic.muted) {
-                bgMusic.muted = false;
-            }
-            playSynthSFX('slider');
         });
 
-        audioToggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // Avoid triggering global container events
-            playSynthSFX('click');
-            
-            if (bgMusic.muted) {
-                bgMusic.muted = false;
-                bgMusic.volume = volumeTarget;
-                muteIcon.style.display = 'none';
-                playIcon.style.display = 'block';
-                volumeSliderWrapper.classList.add('visible');
-            } else {
+        // 3. Track Selection Engine Configuration
+        const trackCards = document.querySelectorAll('.stream-select-trigger');
+        const currentTrackTitle = document.getElementById('currentTrackTitle');
+        const currentTrackArtist = document.getElementById('currentTrackArtist');
+        const currentTrackArt = document.getElementById('currentTrackArt');
+        const queueTrackTitle = document.getElementById('queueTrackTitle');
+        const queueMiniArt = document.getElementById('queueMiniArt');
+
+        trackCards.forEach(card => {
+            card.addEventListener('mouseenter', () => playSynthSFX('hover'));
+            card.addEventListener('click', () => {
+                playSynthSFX('click');
+                const title = card.getAttribute('data-title');
+                const artist = card.getAttribute('data-artist');
+                const visualIdentity = card.querySelector('.card-art-frame').innerText;
+                
+                currentTrackTitle.innerText = title;
+                currentTrackArtist.innerText = artist;
+                currentTrackArt.innerText = visualIdentity;
+
+                queueTrackTitle.innerText = title;
+                queueMiniArt.innerText = visualIdentity;
+                
+                // Track reload sequence initialization logic
                 if (bgMusic.paused) {
-                    bgMusic.play();
-                    muteIcon.style.display = 'none';
-                    playIcon.style.display = 'block';
-                } else {
-                    bgMusic.pause();
-                    muteIcon.style.display = 'block';
-                    playIcon.style.display = 'none';
-                }
-            }
-        });
-
-        // Add hover SFX to Navigation Links & Tip boxes
-        document.querySelectorAll('.nav-link, .tip-box, .theme-toggle-btn').forEach(elem => {
-            elem.addEventListener('mouseenter', () => playSynthSFX('hover'));
-        });
-
-        // Form Submit Actions
-        document.getElementById('journeyForm').addEventListener('submit', (event) => {
-            event.preventDefault();
-            playSynthSFX('submit');
-            setTimeout(() => {
-                alert('Inquiry submitted!');
-            }, 100);
-        });
-
-        // 3. Consolidated Canon Deltarune Lyrics Engine
-        const deltaruneLyrics = [
-            { time: 2.00,  text: "♪ Don't Forget ♪" },
-            { time: 4.50,  text: "When the light is running low..." },
-            { time: 7.80,  text: "...and the shadows start to grow," },
-            { time: 11.20, text: "And the places that you know seem like fantasy." },
-            { time: 18.00, text: "There's a light inside your soul..." },
-            { time: 21.50, text: "...that's still shining in the cold with the truth." },
-            { time: 26.50, text: "The promise in our hearts..." },
-            { time: 30.00, text: "Don't forget, I'm with you in the dark." },
-            { time: 40.00, text: "♪ Raise Up Your Bat ♪" },
-            { time: 43.00, text: "WHEN THE DEMON HEART IS CRYING!" },
-            { time: 46.20, text: "AND THE BLOOD IS GUSHING BRIGHT!" },
-            { time: 49.50, text: "RAISE UP YOUR BAT FOR THE BURNING FIGHT!" },
-            { time: 53.00, text: "WHEN YOUR HOPE IS SLOWLY DYING!" },
-            { time: 56.10, text: "AND YOUR FUTURE'S LOST ITS RIGHTS!" },
-            { time: 59.40, text: "RAISE UP YOUR BAT AND FACE THE FRIGHT!" },
-            { time: 62.50, text: "LET'S KNOCK 'EM DEAD INTO THE NIGHT!" },
-            { time: 66.00, text: "[Guitar Solo]" },
-            { time: 72.00, text: "Come follow me into the dark, with your heart as the ark..." },
-            { time: 78.50, text: "...which shall shine you the way." },
-            { time: 82.00, text: "Because I'm with you in the dark, with your heart as my mark..." },
-            { time: 88.50, text: "...which shall guide you the way, through the waves." },
-            { time: 105.00, text: "♪ Flower Man ♪" },
-            { time: 108.33, text: "Ten feet twenty, the Flower Man..." },
-            { time: 111.17, text: "...is waiting for the touch of his hand." },
-            { time: 114.08, text: "Straightening petals out without a plan..." },
-            { time: 116.83, text: "...like the every daily." },
-            { time: 119.67, text: "Wish that bothers the Flower Man:" },
-            { time: 122.50, text: "Could I do something to make him laugh..." },
-            { time: 125.42, text: "...inside my little chamber made of glass?" },
-            { time: 128.33, text: "So he lived the..." },
-            { time: 131.00, text: "FLOWER MAN, FLOWER MAN!" },
-            { time: 133.83, text: "With his heart in the sand, so he stands!" },
-            { time: 136.67, text: "To watch the whole wide world from a can!" },
-            { time: 139.50, text: "Way up high in the sky, with the sun in his eyes!" },
-            { time: 142.33, text: "Ain't it nice, the life forever for... FLOWERS." }
-        ];
-
-        let lastLineText = "";
-
-        bgMusic.addEventListener('timeupdate', () => {
-            const currentTime = bgMusic.currentTime;
-            
-            let currentLine = null;
-            for (let i = 0; i < deltaruneLyrics.length; i++) {
-                if (currentTime >= deltaruneLyrics[i].time) {
-                    currentLine = deltaruneLyrics[i];
-                } else {
-                    break;
-                }
-            }
-
-            if (currentLine) {
-                if (lastLineText !== currentLine.text) {
-                    lastLineText = currentLine.text;
-                    subtitleHudText.style.opacity = 0;
-                    
-                    setTimeout(() => {
-                        subtitleHudText.innerText = currentLine.text;
-                        subtitleHudDisplay.classList.add('active-text');
-                        subtitleHudText.style.opacity = 1;
-                    }, 150);
-                }
-            } else {
-                subtitleHudDisplay.classList.remove('active-text');
-                subtitleHudText.innerText = "";
-                lastLineText = "";
-            }
-        });
-
-        bgMusic.addEventListener('pause', () => {
-            subtitleHudDisplay.classList.remove('active-text');
-            subtitleHudText.innerText = "";
-            lastLineText = ""; 
-        });
-
-        // 4. Scroll Reveal Intersections
-        const revealElements = document.querySelectorAll('.reveal');
-        const options = { threshold: 0.05, rootMargin: "0px 0px -40px 0px" };
-
-        const observer = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
+                    bgMusic.play().then(() => syncPlayButtonState()).catch(()=>{});
                 }
             });
-        }, options);
-        revealElements.forEach(el => observer.observe(el));
+        });
 
-        // 5. Cursor Light Track Engine
+        // 4. Live Counter Telemetry
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        bgMusic.addEventListener('timeupdate', () => {
+            timeElapsedDisplay.innerText = formatTime(bgMusic.currentTime);
+            
+            // Sync dummy progression slider timeline 
+            if (!isNaN(bgMusic.duration) && isFinite(bgMusic.duration)) {
+                progressTrackNode.value = (bgMusic.currentTime / bgMusic.duration) * 100;
+            } else {
+                // If live radio stream, simulate progress movement patterns
+                progressTrackNode.value = (bgMusic.currentTime % 60) * (100 / 60);
+            }
+        });
+
+        // Mouse glow tracker coordinates logic
         const mouseGlow = document.getElementById('mouseGlow');
         window.addEventListener('mousemove', (e) => {
             mouseGlow.style.left = e.clientX + 'px';
             mouseGlow.style.top = e.clientY + 'px';
         });
-
-        // 6. Header Scroll Transition
-        const headerCullingContent = document.getElementById('headerCullingContent');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 180) {
-                headerCullingContent.classList.add('title-culled');
-            } else {
-                headerCullingContent.classList.remove('title-culled');
-            }
-        });
-
-        // 7. Interactive Profile Display Engine
-        const triggers = document.querySelectorAll('.interactive-trigger');
-
-        triggers.forEach(trigger => {
-            trigger.addEventListener('mouseenter', () => {
-                playSynthSFX('hover');
-                const targetId = trigger.getAttribute('data-target');
-                const groupType = trigger.getAttribute('data-group');
-                
-                const popBox = document.getElementById(`${groupType}PopBox`);
-                const placeholder = document.getElementById(`placeholder-${groupType}`);
-                const targetPlaceholder = document.getElementById(`img-${targetId}`);
-                
-                if (targetPlaceholder) {
-                    placeholder.classList.add('hidden');
-                    popBox.classList.add('has-image');
-                    targetPlaceholder.classList.add('visible');
-                }
-            });
-            
-            trigger.addEventListener('mouseleave', () => {
-                const targetId = trigger.getAttribute('data-target');
-                const groupType = trigger.getAttribute('data-group');
-                
-                const popBox = document.getElementById(`${groupType}PopBox`);
-                const placeholder = document.getElementById(`placeholder-${groupType}`);
-                const targetPlaceholder = document.getElementById(`img-${targetId}`);
-                
-                if (targetPlaceholder) {
-                    targetPlaceholder.classList.remove('visible');
-                }
-                
-                placeholder.classList.remove('hidden');
-                popBox.classList.remove('has-image');
-            });
-        });
     </script>
-
 </body>
 </html>
