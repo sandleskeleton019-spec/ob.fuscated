@@ -83,6 +83,24 @@
             background: radial-gradient(circle at 50% 50%, transparent 10%, rgba(12, 6, 26, 0.85) 90%);
         }
 
+        /* Streaming Portal Header Overlay Background video */
+        .stream-background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .stream-background-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.25;
+        }
+
         /* Control Toggles */
         .control-panel {
             position: fixed;
@@ -800,7 +818,7 @@
         </button>
 
         <div class="control-row">
-            <button class="theme-toggle-btn" id="audioToggleNode" aria-label="Toggle background music track">
+            <button class="theme-toggle-btn" id="audioToggleNode" aria-label="Toggle background track stream audio">
                 <svg class="mute-icon" viewBox="0 0 24 24" style="display: block;"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>
                 <svg class="play-icon" viewBox="0 0 24 24" style="display: none;"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
             </button>
@@ -815,10 +833,6 @@
         <p id="subtitleHudText"></p>
     </div>
 
-    <audio id="bgMusic" loop>
-        <source src="Flower Man.mp3" type="audio/mpeg">
-    </audio>
-
     <div class="cursor-glow" id="mouseGlow"></div>
 
     <nav>
@@ -831,6 +845,12 @@
     </nav>
 
     <header id="hero-header">
+        <div class="stream-background-container">
+            <video id="bgMusic" autoplay loop muted playsinline>
+                <source src="Flower Man.mp4" type="video/mp4">
+            </video>
+        </div>
+        
         <div class="title-culling-wrapper" id="headerCullingContent">
             <h1>Thanh Hoa City</h1>
             <p>Discover historic citadels, sun-drenched coastlines, and a rich culinary tradition in Central Vietnam.</p>
@@ -1062,7 +1082,7 @@
                     osc.stop(now + 0.3);
                 }
             } catch (e) {
-                console.warn("SFX failed to play: ", e);
+                console.warn("SFX omitted background: ", e);
             }
         }
 
@@ -1078,7 +1098,7 @@
             }
         });
 
-        // 2. Audio Core Layout System Configurations
+        // 2. Automated Media Streaming Integration Layout Engine
         const audioToggle = document.getElementById('audioToggleNode');
         const bgMusic = document.getElementById('bgMusic');
         const muteIcon = audioToggle.querySelector('.mute-icon');
@@ -1088,29 +1108,61 @@
         const subtitleHudDisplay = document.getElementById('subtitleHudDisplay');
         const subtitleHudText = document.getElementById('subtitleHudText');
 
-        // Master Volume Init
-        bgMusic.volume = 0.20;
+        // Master Volume Setup Configuration
+        let volumeTarget = 0.20;
+        bgMusic.volume = volumeTarget;
+
+        // Auto Stream Activation Sequence Hook
+        window.addEventListener('DOMContentLoaded', () => {
+            bgMusic.play().catch(err => {
+                console.log("Autoplay context execution pending client fallback gesture interaction.", err);
+            });
+        });
+
+        // Fallback global handler to unmute audio if block was enforced
+        function genericUnmuteInteractionFallback() {
+            if (bgMusic.muted) {
+                bgMusic.muted = false;
+                bgMusic.volume = volumeTarget;
+                muteIcon.style.display = 'none';
+                playIcon.style.display = 'block';
+                volumeSliderWrapper.classList.add('visible');
+            }
+            window.removeEventListener('click', genericUnmuteInteractionFallback);
+            window.removeEventListener('scroll', genericUnmuteInteractionFallback);
+        }
+        window.addEventListener('click', genericUnmuteInteractionFallback);
+        window.addEventListener('scroll', genericUnmuteInteractionFallback);
 
         volumeControlNode.addEventListener('input', (e) => {
-            bgMusic.volume = e.target.value;
+            volumeTarget = e.target.value;
+            bgMusic.volume = volumeTarget;
+            if(bgMusic.muted) {
+                bgMusic.muted = false;
+            }
             playSynthSFX('slider');
         });
 
-        audioToggle.addEventListener('click', () => {
+        audioToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); // Avoid triggering global container events
             playSynthSFX('click');
-            if (bgMusic.paused) {
-                bgMusic.play().then(() => {
+            
+            if (bgMusic.muted) {
+                bgMusic.muted = false;
+                bgMusic.volume = volumeTarget;
+                muteIcon.style.display = 'none';
+                playIcon.style.display = 'block';
+                volumeSliderWrapper.classList.add('visible');
+            } else {
+                if (bgMusic.paused) {
+                    bgMusic.play();
                     muteIcon.style.display = 'none';
                     playIcon.style.display = 'block';
-                    volumeSliderWrapper.classList.add('visible');
-                }).catch(err => {
-                    console.log("Audio playback constraints applied.", err);
-                });
-            } else {
-                bgMusic.pause();
-                muteIcon.style.display = 'block';
-                playIcon.style.display = 'none';
-                volumeSliderWrapper.classList.remove('visible');
+                } else {
+                    bgMusic.pause();
+                    muteIcon.style.display = 'block';
+                    playIcon.style.display = 'none';
+                }
             }
         });
 
